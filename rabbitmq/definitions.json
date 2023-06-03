@@ -1,0 +1,103 @@
+{
+  "vhosts":[
+    {
+      "name": "${RABBITMQ_DEFAULT_VHOST}"
+    }
+  ],
+  "users": [
+    {
+      "name": "user",
+      "password": "password",
+      "tags": "administrator"
+    }
+  ],
+  "permissions":[
+    {
+      "user": "user",
+      "vhost": "${RABBITMQ_DEFAULT_VHOST}",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "policies":[
+    {
+      "vhost":"${RABBITMQ_DEFAULT_VHOST}",
+      "name":"lagoon-ha",
+      "pattern":"${RABBITMQ_DEFAULT_HA_PATTERN}",
+      "definition":
+        {
+          "ha-mode":"exactly",
+          "ha-params":2,
+          "ha-sync-mode":"automatic",
+          "ha-sync-batch-size":5
+        }
+    }
+  ],
+  "queues": [
+    {
+      "name": "queue-1",
+      "vhost":  "${RABBITMQ_DEFAULT_VHOST}",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "queue-2",
+      "vhost":  "${RABBITMQ_DEFAULT_VHOST}",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "queue-3",
+      "vhost":  "${RABBITMQ_DEFAULT_VHOST}",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "fanout_exchange",
+      "vhost":  "${RABBITMQ_DEFAULT_VHOST}",
+      "type": "fanout",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "fanout_exchange",
+      "vhost":  "${RABBITMQ_DEFAULT_VHOST}",
+      "destination": "queue-1",
+      "destination_type": "queue",
+      "routing_key": "queue-1-rk",
+      "arguments": {}
+    },
+    {
+      "source": "fanout_exchange",
+      "vhost":  "${RABBITMQ_DEFAULT_VHOST}",
+      "destination": "queue-2",
+      "destination_type": "queue",
+      "routing_key": "queue-2-rk",
+      "arguments": {}
+    },
+    {
+      "source": "fanout_exchange",
+      "vhost":  "${RABBITMQ_DEFAULT_VHOST}",
+      "destination": "queue-3",
+      "destination_type": "queue",
+      "routing_key": "queue-3rk",
+      "arguments": {}
+    }
+  ]
+}
